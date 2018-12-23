@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/gotk3/gotk3/glib"
@@ -72,8 +73,15 @@ func main() {
 		window := win.(*gtk.Window)
 		window.SetTitle("pr0")
 
-		err = ioutil.WriteFile("/tmp/haxor.png", icon, 0644)
-		window.SetIconFromFile("/tmp/haxor.png")
+		if runtime.GOOS == "linux" {
+			err = ioutil.WriteFile("/tmp/haxor.png", icon, 0644)
+			if err != nil {
+				log.Fatal("Could not", err)
+			}
+
+			window.SetIconFromFile("/tmp/haxor.ico")
+		}
+
 		window.Show()
 
 		resultB, err := bd.GetObject("word")
